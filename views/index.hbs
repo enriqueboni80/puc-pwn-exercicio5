@@ -4,3 +4,40 @@
 <script type="text/javascript">
     const socket = io('http://localhost:3000');
 </script>
+
+<ul id="messages"></ul>
+
+<form id="comment-form">
+    Author:<br>
+    <input type="text" name="author">
+    <br><br>
+    Comment:<br>
+    <textarea name="comment" id="" cols="25" rows="5"></textarea>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    const messageForm = document.getElementById('comment-form')
+    messageForm.onsubmit = function (event) {
+        event.preventDefault()
+        const author = document.getElementsByName('author')[0].value
+        const comment = document.getElementsByName('comment')[0].value
+        console.log(event.target)
+        const data = { author, comment }
+        renderMessage(data)
+        socket.emit('message', data)
+    }
+
+    const messagesList = document.getElementById('messages')
+    const renderMessage = (message) => {
+        const element = document.createElement('li')
+        element.innerHTML = `<strong>${message.author}</strong>: ${message.comment}`
+        messagesList.append(element)
+    }
+
+    socket.on('message', function (message) {
+        renderMessage(message)
+    })
+
+</script>

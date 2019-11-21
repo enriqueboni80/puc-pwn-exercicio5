@@ -9,7 +9,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 io.on('connection', (socket) => {
-    console.log(`User connected with id ${socket.id}`)
+    socket.on('message', conteudo => {
+        socket.broadcast.emit('message', conteudo)
+    })
 })
 
 app.get('/', (req, res) => {
@@ -17,5 +19,5 @@ app.get('/', (req, res) => {
 })
 
 http.listen(3000, () => {
-  console.log('Listening on port 3000')
+    console.log('Listening on port 3000')
 })
